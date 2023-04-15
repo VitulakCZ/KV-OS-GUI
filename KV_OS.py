@@ -121,6 +121,7 @@ while running:
 					if events.type == pygame.MOUSEBUTTONDOWN:
 						if ano.collidepoint(events.pos):
 							pygame.quit()
+							quit()
 						if ne.collidepoint(events.pos):
 							surface.fill(color)
 							zustat = True
