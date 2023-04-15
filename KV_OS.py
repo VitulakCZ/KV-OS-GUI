@@ -1,6 +1,6 @@
 # import
 import pygame
-from pygame	import mixer
+from pygame import mixer
 import sys
 import time
 		
@@ -46,9 +46,9 @@ smallfont = pygame.font.SysFont('Corbel', 15)
 buttonText = font.render('menu', True, color)
 
 # text
-vypnoutText	= font.render('SHUTDOWN', True, green)
-vypnoutRect	= vypnoutText.get_rect()
-vypnoutRect.center = (X	// 8,	Y // 1.25)
+vypnoutText = font.render('SHUTDOWN', True, green)
+vypnoutRect = vypnoutText.get_rect()
+vypnoutRect.center = (X	// 8, Y // 1.25)
 
 optionsText = font.render('OPTIONS', True, green)
 optionsRect = optionsText.get_rect()
@@ -56,7 +56,7 @@ optionsRect.center = (X // 1.9,	Y // 1.25)
 
 pripravaText = font.render('Připravujeme', True, green)
 pripravaRect = pripravaText.get_rect()
-pripravaRect.center	= (X //	3,	Y // 3)
+pripravaRect.center = (X //	3, Y // 3)
 
 opravduText = bigfont.render('Opravdu?', True, (255, 0, 64))
 opravduRect = opravduText.get_rect()
@@ -89,14 +89,14 @@ vybarveno = False
 
 # main loop
 while running:
-	a,b	= pygame.mouse.get_pos()
+	a,b = pygame.mouse.get_pos()
 	
 	# text
 	if not vybarveno:
 		surface.blit(vypnoutText, vypnoutRect)
 		surface.blit(optionsText, optionsRect)
 	
-	for	events in pygame.event.get():
+	for events in pygame.event.get():
 		if events.type == pygame.QUIT or (events.type == pygame.MOUSEBUTTONDOWN and shutdown.collidepoint(events.pos)):
 			zustat = False
 			while not zustat:
@@ -108,7 +108,7 @@ while running:
 				pygame.draw.rect(surface, green, ne)
 				surface.blit(neText, neRect)
 				
-				a,b	= pygame.mouse.get_pos()
+				a,b = pygame.mouse.get_pos()
 				if ano.x <= a <= ano.x + 100 and ano.y <= b <= ano.y + 35:
 					pygame.draw.rect(surface, color_light, ano)
 					surface.blit(anoText, anoRect)
