@@ -132,8 +132,6 @@ while running:
 				pygame.display.update()
 				time.sleep(1.5)
 				surface.fill(color)
-				vybarveno = True
-		
 		if not vybarveno:
 			if shutdown.x <= a <= shutdown.x + 50 and shutdown.y <=	b <= shutdown.y	+ 50:
 				pygame.draw.rect(surface, color_light, shutdown)
