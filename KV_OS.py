@@ -29,6 +29,7 @@ color_dark = (100, 100, 100)
 color_light = (170, 170, 170)
 green = (34,139,34)
 blue = (30,144,255)
+red = (255, 0, 64)
 
 # Changing surface color
 surface.fill(color)
@@ -45,6 +46,7 @@ Y = surface.get_height()
 bigfont = pygame.font.SysFont('Corbel', 55)
 font = pygame.font.SysFont('Corbel', 35)
 smallfont = pygame.font.SysFont('Corbel', 15)
+jazykfont = pygame.font.SysFont('Arial', 40)
 
 ## render
 def preklad(jazyk):
@@ -55,8 +57,11 @@ def preklad(jazyk):
 	global opravduText
 	global anoText
 	global neText
+	global zpetTextStr
 	global zpetText
+	global jazykZpetText
 	global jazykText
+	global vyberJazykaText
 	
 	surface.fill(color)
 	pygame.display.update()
@@ -71,14 +76,17 @@ def preklad(jazyk):
 	buttonText = font.render(translator.translate("menu"), True, color)
 	vypnoutText = font.render(translator.translate("shutdown").upper(), True, green)
 	optionsText = font.render(translator.translate('options').upper(), True, green)
-	opravduText = bigfont.render(translator.translate('Really?'), True, (255, 0, 64))
-	anoText = font.render(translator.translate('Yes'), True, (64, 0, 64))
-	neText = font.render(translator.translate('No'), True, (64, 0, 64))
-	zpetText = font.render(translator.translate('Back'), True, (64, 0, 64))
-	jazykText = font.render(translator.translate('Language'), True, (64, 0, 64))
+	opravduText = bigfont.render(translator.translate('Really?'), True, red)
+	anoText = font.render(translator.translate('Yes'), True, black)
+	neText = font.render(translator.translate('No'), True, black)
+	zpetTextStr = translator.translate('Back')
+	zpetText = font.render(zpetTextStr, True, black)
+	jazykZpetText = jazykfont.render(zpetTextStr, True, black)
+	jazykText = font.render(translator.translate('Language'), True, black)
+	vyberJazykaText = bigfont.render(translator.translate('Change language'), True, red)
 	surface.fill(color)
 
-vybrany_jazyk = "cs"
+vybrany_jazyk = "en"
 preklad(vybrany_jazyk)
 # text
 vypnoutRect = vypnoutText.get_rect()
@@ -93,21 +101,22 @@ pripravaRect.center = (X //	3, Y // 3)
 opravduRect = opravduText.get_rect()
 opravduRect.center = (X // 2, Y // 2.5)
 
-anoRect = opravduText.get_rect()
-anoRect.center = (X // 2.35, Y // 1.85)
+anoRect = anoText.get_rect()
+anoRect.center = (X // 2.8, Y // 1.87)
 
-neRect = opravduText.get_rect()
-neRect.center = (X // 1.4, Y // 1.85)
+neRect = neText.get_rect()
+neRect.center = (X // 1.6, Y // 1.87)
 
-zpetRect = opravduText.get_rect()
-zpetRect.center = (X // 1.4, Y // 1.85)
+jazykRect = jazykText.get_rect()
+jazykRect.center = (X // 2.6, Y // 1.87)
 
-jazykRect = opravduText.get_rect()
-jazykRect.center = (X // 2.35, Y // 1.85)
+zpetRect = zpetText.get_rect()
+zpetRect.center = (X // 1.6, Y // 1.87)
 
 def vyber_jazyku():
-	jazykfont = pygame.font.SysFont('Arial', 40)
-		
+	vyberJazykaRect = vyberJazykaText.get_rect()
+	vyberJazykaRect.center = (X // 2, Y - 550)
+	
 	ceskyText = jazykfont.render("Česky", True, black)
 	ceskyRect = ceskyText.get_rect()
 	ceskyRect.x = 50
@@ -128,17 +137,28 @@ def vyber_jazyku():
 	spanelskyRect.x = 50
 	spanelskyRect.y = 250
 	
-	texty = {"Česky": "cs", "English": "en", "Deutsch": "de", "Español": "es"}
+	ruskyText = jazykfont.render("Русский", True, black)
+	ruskyRect = ruskyText.get_rect()
+	ruskyRect.x = 50
+	ruskyRect.y = 300
+	
+	jazykZpetRect = jazykZpetText.get_rect()
+	jazykZpetRect.center = (X // 1.1, Y - 50)
+	
+	texty = {"Česky": "cs", "English": "en", "Deutsch": "de", "Español": "es", "Русский": "ru", zpetTextStr: False}
 	textykeys = list(texty.keys())
-	recty = [ceskyRect, anglickyRect, nemeckyRect, spanelskyRect]
+	recty = [ceskyRect, anglickyRect, nemeckyRect, spanelskyRect, ruskyRect, jazykZpetRect]
 	
 	vybirani = True
 	vybranyJazyk = None
 	while vybirani:
+		surface.blit(vyberJazykaText, vyberJazykaRect)
 		surface.blit(ceskyText, ceskyRect)
 		surface.blit(anglickyText, anglickyRect)
 		surface.blit(nemeckyText, nemeckyRect)
 		surface.blit(spanelskyText, spanelskyRect)
+		surface.blit(ruskyText, ruskyRect)
+		surface.blit(jazykZpetText, jazykZpetRect)
 		
 		for events in pygame.event.get():
 			if events.type == pygame.MOUSEBUTTONDOWN:
@@ -250,13 +270,19 @@ while running:
 								time.sleep(.3)
 								surface.fill(color)
 								vybrany_jazyk = vyber_jazyku()
+								if not vybrany_jazyk:
+									print(f"{Fore.GREEN}LOG:{Fore.RESET} jazyk:zpet")
+									zustat = True
+									break
+								print(f"{Fore.GREEN}LOG:{Fore.RESET} jazyk:nacitani")
 								preklad(vybrany_jazyk)
+								print(f"{Fore.GREEN}LOG:{Fore.RESET} jazyk:vybran")
 								zustat = True
 							if zpet.collidepoint(events.pos):
 								print(f"{Fore.GREEN}LOG:{Fore.RESET} settings:zpet")
 								surface.fill(color)
 								zustat = True
-									
+								
 					#
 		if not log2:
 			print(f"{Fore.GREEN}LOG:{Fore.RESET} menu:tlacitka")
