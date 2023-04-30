@@ -36,10 +36,7 @@ surface.fill(color)
 pygame.display.flip()
 
 # variables
-width =	surface.get_width()
-height = surface.get_height()
-running	= True
-X = width
+X = surface.get_width()
 Y = surface.get_height()
 
 # font
@@ -48,7 +45,45 @@ font = pygame.font.SysFont('Corbel', 35)
 smallfont = pygame.font.SysFont('Corbel', 15)
 jazykfont = pygame.font.SysFont('Arial', 40)
 
-## render
+# kontrola Alt-F4, křížku nebo shutdownu
+def ukonceni(events, v_hlavnim_menu):
+	if events.type == pygame.QUIT or (v_hlavnim_menu and events.type == pygame.MOUSEBUTTONDOWN and shutdown.collidepoint(events.pos)):
+		print(f"{Fore.GREEN}LOG:{Fore.RESET} vypnuti:menu")
+		zustat = False
+		while not zustat:
+			# Modro
+			pygame.draw.rect(surface, color, modro)
+			
+			surface.blit(opravduText, opravduRect)
+			# Ano
+			pygame.draw.rect(surface, green, ano)
+			surface.blit(anoText, anoRect)
+			# Ne
+			pygame.draw.rect(surface, green, ne)
+			surface.blit(neText, neRect)
+			
+			a,b = pygame.mouse.get_pos()
+			if ano.x <= a <= ano.x + 100 and ano.y <= b <= ano.y + 35:
+				pygame.draw.rect(surface, color_light, ano)
+				surface.blit(anoText, anoRect)
+			if ne.x <= a <= ne.x + 100 and ne.y <= b <= ne.y + 35:
+				pygame.draw.rect(surface, color_light, ne)
+				surface.blit(neText, neRect)
+				
+			pygame.display.update()
+			for events in pygame.event.get():
+				if events.type == pygame.MOUSEBUTTONDOWN:
+					if ano.collidepoint(events.pos):
+						print(f"{Fore.GREEN}LOG:{Fore.RESET} vypnuti:vypnuti{Fore.RESET}")
+						pygame.quit()
+						print(f"{Fore.RED}SHUTDOWN{Fore.RESET}")
+						quit()
+					if ne.collidepoint(events.pos):
+						print(f"{Fore.GREEN}LOG:{Fore.RESET} vypnuti:zpět")
+						surface.fill(color)
+						zustat = True
+						return True
+
 def preklad(jazyk):
 	global buttonText
 	global vypnoutText
@@ -175,29 +210,25 @@ def vyber_jazyku():
 				
 				surface.fill(color)
 				return texty.get(vybranyJazyk)
+			ukonceni(events, False)
 		pygame.display.update()
-
-# idk
-surf = font.render('Shut Down', True, 'white')
 
 ## mainofbuttons
 shutdown = pygame.Rect(75, 400, 50, 50)
 options = pygame.Rect(400, 400, 50, 50)
+modro = pygame.Rect(230, 200, 330, 135)
 ano = pygame.Rect(230, 300, 100, 35)
 ne = pygame.Rect(450, 300, 100, 35)
 OK = pygame.Rect(350, 400, 50, 50)
 zpet = pygame.Rect(450, 300, 100, 35)
 jazyk = pygame.Rect(230, 300, 100, 35)
 
-#
-
-#
 zustat = False
 log1 = False
 log2 = False
 
 # main loop
-while running:
+while True:
 	zustat = False
 	a,b = pygame.mouse.get_pos()
 	
@@ -208,47 +239,17 @@ while running:
 	surface.blit(vypnoutText, vypnoutRect)
 	surface.blit(optionsText, optionsRect)
 	
+	konec_check = False
 	for events in pygame.event.get():
-		if events.type == pygame.QUIT or (events.type == pygame.MOUSEBUTTONDOWN and shutdown.collidepoint(events.pos)):
-			print(f"{Fore.GREEN}LOG:{Fore.RESET} vypnuti:menu")
-			while not zustat:
-				surface.blit(opravduText, opravduRect)
-				# Ano
-				pygame.draw.rect(surface, green, ano)
-				surface.blit(anoText, anoRect)
-				# Ne
-				pygame.draw.rect(surface, green, ne)
-				surface.blit(neText, neRect)
-				
-				a,b = pygame.mouse.get_pos()
-				if ano.x <= a <= ano.x + 100 and ano.y <= b <= ano.y + 35:
-					pygame.draw.rect(surface, color_light, ano)
-					surface.blit(anoText, anoRect)
-				if ne.x <= a <= ne.x + 100 and ne.y <= b <= ne.y + 35:
-					pygame.draw.rect(surface, color_light, ne)
-					surface.blit(neText, neRect)
-					
-				pygame.display.update()
-				for events in pygame.event.get():
-					if events.type == pygame.MOUSEBUTTONDOWN:
-						if ano.collidepoint(events.pos):
-							print(f"{Fore.GREEN}LOG:{Fore.RESET} vypnuti:vypnuti{Fore.RESET}")
-							pygame.quit()
-							print(f"{Fore.RED}SHUTDOWN{Fore.RESET}")
-							quit()
-						if ne.collidepoint(events.pos):
-							print(f"{Fore.GREEN}LOG:{Fore.RESET} vypnuti:zpět")
-							surface.fill(color)
-							zustat = True
 		# options
 		if events.type == pygame.MOUSEBUTTONDOWN:
 			if options.collidepoint(events.pos):
 				print(f"{Fore.GREEN}LOG:{Fore.RESET} settings:menu")
 				while not zustat:
-					#
+					# Jazyk
 					pygame.draw.rect(surface, green, jazyk)
 					surface.blit(jazykText, jazykRect)
-					#
+					# Zpět
 					pygame.draw.rect(surface, green, zpet)
 					surface.blit(zpetText, zpetRect)
 					
@@ -282,8 +283,12 @@ while running:
 								print(f"{Fore.GREEN}LOG:{Fore.RESET} settings:zpet")
 								surface.fill(color)
 								zustat = True
-								
-					#
+						konec_check = ukonceni(events, False)
+						if konec_check:
+							zustat = True
+		if not konec_check:
+			ukonceni(events, True)
+				
 		if not log2:
 			print(f"{Fore.GREEN}LOG:{Fore.RESET} menu:tlacitka")
 			log2 = True
@@ -302,6 +307,3 @@ while running:
 	
 	# update
 	pygame.display.update()
-	
-# Quit the GUI game
-pygame.quit()
