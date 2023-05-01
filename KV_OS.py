@@ -97,6 +97,10 @@ def preklad(jazyk):
 	global jazykZpetText
 	global jazykText
 	global vyberJazykaText
+	global hryText
+	global okText
+	global texthryText
+	global exceptText
 	
 	surface.fill(color)
 	pygame.display.update()
@@ -114,11 +118,15 @@ def preklad(jazyk):
 	opravduText = bigfont.render(translator.translate('Really?'), True, red)
 	anoText = font.render(translator.translate('Yes'), True, black)
 	neText = font.render(translator.translate('No'), True, black)
+	hryText = font.render(translator.translate('games'), True, green)
+	okText = font.render(translator.translate('OK'), True, green)
+	exceptText = font.render(translator.translate('File not found!'), True, red)
 	zpetTextStr = translator.translate('Back')
 	zpetText = font.render(zpetTextStr, True, black)
 	jazykZpetText = jazykfont.render(zpetTextStr, True, black)
 	jazykText = font.render(translator.translate('Language'), True, black)
 	vyberJazykaText = bigfont.render(translator.translate('Change language'), True, red)
+	texthryText = font.render(translator.translate('write name of game you want to run without .py'), True, green)
 	surface.fill(color)
 
 vybrany_jazyk = "en"
@@ -147,6 +155,20 @@ jazykRect.center = (X // 2.6, Y // 1.87)
 
 zpetRect = zpetText.get_rect()
 zpetRect.center = (X // 1.6, Y // 1.87)
+
+hryRect = hryText.get_rect()
+hryRect.center = (X // 2.6, Y // 1.87)
+
+input_rect = pygame.Rect(200, 200, 140, 32)
+
+okRect = okText.get_rect()
+okRect.center = (X // 2, Y // 2.80)
+
+texthryRect = texthryText.get_rect()
+texthryRect.center = (X // 2, Y // 3.30)
+
+exceptRect = exceptText.get_rect()
+exceptRect.center = (X // 2, Y // 2.30)
 
 def vyber_jazyku():
 	vyberJazykaRect = vyberJazykaText.get_rect()
@@ -219,13 +241,16 @@ options = pygame.Rect(400, 400, 50, 50)
 modro = pygame.Rect(230, 200, 330, 135)
 ano = pygame.Rect(230, 300, 100, 35)
 ne = pygame.Rect(450, 300, 100, 35)
-OK = pygame.Rect(350, 400, 50, 50)
+OK = pygame.Rect(50, 400, 50, 50)
 zpet = pygame.Rect(450, 300, 100, 35)
 jazyk = pygame.Rect(230, 300, 100, 35)
+hry = pygame.Rect(230, 300, 100, 35)
 
 zustat = False
 log1 = False
 log2 = False
+user_text = ''
+active = False
 
 # main loop
 while True:
@@ -238,12 +263,48 @@ while True:
 		log1 = True
 	surface.blit(vypnoutText, vypnoutRect)
 	surface.blit(optionsText, optionsRect)
+	surface.blit(hryText, hryRect)
 	
 	konec_check = False
 	for events in pygame.event.get():
 		# options
 		if events.type == pygame.MOUSEBUTTONDOWN:
+			if hry.collidepoint(events.pos):
+				surface.fill(color)
+				
+				zustat = False
+				while not zustat:
+					pygame.draw.rect(surface, green, input_rect)
+					text_surface = font.render(user_text, True, (255, 255, 255))
+					surface.blit(text_surface, (input_rect.x+5, input_rect.y+5))
+					input_rect.w = max(100, text_surface.get_width()+10)
+					surface.blit(okText, okRect)
+					surface.blit(texthryText, texthryRect)
+					pygame.display.update()
+					for events in pygame.event.get():
+						if events.type == pygame.MOUSEBUTTONDOWN:
+							
+							if okRect.collidepoint(events.pos):
+								try:
+									with open(f"{user_text}.py") as hra:
+										exec(hra.read())
+										zustat = True
+								except:
+									surface.blit(exceptText, exceptRect)
+							if input_rect.collidepoint(events.pos):
+								
+								active = True
+							else:
+								
+								active = False
+						if events.type == pygame.KEYDOWN:
+							if events.key == pygame.K_BACKSPACE:
+								user_text = user_text[:-1]
+							else:
+								user_text += events.unicode
+					
 			if options.collidepoint(events.pos):
+				surface.fill(color)
 				print(f"{Fore.GREEN}LOG:{Fore.RESET} settings:menu")
 				while not zustat:
 					# Jazyk
@@ -265,6 +326,7 @@ while True:
 					for events in pygame.event.get():
 						if events.type == pygame.MOUSEBUTTONDOWN:
 							if jazyk.collidepoint(events.pos):
+								surface.fill(color)
 								print(f"{Fore.GREEN}LOG:{Fore.RESET} settings:jazyk")
 								surface.blit(pripravaText, pripravaRect)
 								pygame.display.update()
@@ -280,6 +342,7 @@ while True:
 								print(f"{Fore.GREEN}LOG:{Fore.RESET} jazyk:vybran")
 								zustat = True
 							if zpet.collidepoint(events.pos):
+
 								print(f"{Fore.GREEN}LOG:{Fore.RESET} settings:zpet")
 								surface.fill(color)
 								zustat = True
