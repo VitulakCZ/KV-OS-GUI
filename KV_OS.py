@@ -5,14 +5,13 @@ from pygame import mixer
 import sys
 import time
 from colorama import init, Fore, Style
-		
+
 #set title
 pygame.display.set_caption('KV OS')
 
 #Initializing Pygame modules
 pygame.init()
 mixer.init()
-
 
 #intro
 mixer.music.load("intro_sound.mp3")
@@ -53,7 +52,6 @@ def ukonceni(events, v_hlavnim_menu):
 		while not zustat:
 			# Modro
 			pygame.draw.rect(surface, color, modro)
-			
 			surface.blit(opravduText, opravduRect)
 			# Ano
 			pygame.draw.rect(surface, green, ano)
@@ -61,7 +59,7 @@ def ukonceni(events, v_hlavnim_menu):
 			# Ne
 			pygame.draw.rect(surface, green, ne)
 			surface.blit(neText, neRect)
-			
+
 			a,b = pygame.mouse.get_pos()
 			if ano.x <= a <= ano.x + 100 and ano.y <= b <= ano.y + 35:
 				pygame.draw.rect(surface, color_light, ano)
@@ -69,7 +67,7 @@ def ukonceni(events, v_hlavnim_menu):
 			if ne.x <= a <= ne.x + 100 and ne.y <= b <= ne.y + 35:
 				pygame.draw.rect(surface, color_light, ne)
 				surface.blit(neText, neRect)
-				
+
 			pygame.display.update()
 			for events in pygame.event.get():
 				if events.type == pygame.MOUSEBUTTONDOWN:
@@ -105,17 +103,17 @@ def preklad(jazyk):
 	global exceptText
 	global hryKarta
 	global hryTextKarta
-	
+
 	surface.fill(color)
 	pygame.display.update()
 	translator = Translator(to_lang=jazyk)
-	
+
 	pripravaText = font.render('Připravujeme ...', True, green)
 	pripravaRect = pripravaText.get_rect()
 	pripravaRect.center = (X //	3, Y // 3)
 	surface.blit(pripravaText, pripravaRect)
 	pygame.display.update()
-	
+
 	buttonText = font.render(translator.translate("menu"), True, color)
 	vypnoutText = font.render(translator.translate("shutdown").upper(), True, green)
 	optionsText = font.render(translator.translate('options').upper(), True, green)
@@ -193,42 +191,42 @@ def vyber_jazyku():
 	global vyberJazykaRectKarta
 	global vyberJazykaKarta
 	global vyberJazykaKartaBool
-	
+
 	vyberJazykaRect = vyberJazykaText.get_rect()
 	vyberJazykaRect.center = (X // 2, Y - 550)
-	
+
 	ceskyText = jazykfont.render("Česky", True, black)
 	ceskyRect = ceskyText.get_rect()
 	ceskyRect.x = 50
 	ceskyRect.y = 100
-	
+
 	anglickyText = jazykfont.render("English", True, black)
 	anglickyRect = ceskyText.get_rect()
 	anglickyRect.x = 50
 	anglickyRect.y = 150
-	
+
 	nemeckyText = jazykfont.render("Deutsch", True, black)
 	nemeckyRect = nemeckyText.get_rect()
 	nemeckyRect.x = 50
 	nemeckyRect.y = 200
-	
+
 	spanelskyText = jazykfont.render("Español", True, black)
 	spanelskyRect = spanelskyText.get_rect()
 	spanelskyRect.x = 50
 	spanelskyRect.y = 250
-	
-	ruskyText = jazykfont.render("Русский", True, black)
+
+    ruskyText = jazykfont.render("Русский", True, black)
 	ruskyRect = ruskyText.get_rect()
 	ruskyRect.x = 50
 	ruskyRect.y = 300
-	
+
 	jazykZpetRect = jazykZpetText.get_rect()
 	jazykZpetRect.center = (X // 1.1, Y - 75)
-	
+
 	texty = {"Česky": "cs", "English": "en", "Deutsch": "de", "Español": "es", "Русский": "ru", zpetTextStr: False}
 	textykeys = list(texty.keys())
 	recty = [ceskyRect, anglickyRect, nemeckyRect, spanelskyRect, ruskyRect, jazykZpetRect]
-	
+
 	vybirani = True
 	vybranyJazyk = None
 	while vybirani:
@@ -241,7 +239,7 @@ def vyber_jazyku():
 		surface.blit(jazykZpetText, jazykZpetRect)
 		#lista
 		pygame.draw.rect(surface, black, pygame.Rect(0, 565, 1000, 35))
-				
+
 		vyberJazykaTextKarta = smallfont.render(vyberJazykaTextStr, True, (0, 0, 255))
 		vyberJazykaRectKarta = vyberJazykaTextKarta.get_rect()
 		vyberJazykaRectKarta.x = 20
@@ -250,7 +248,7 @@ def vyber_jazyku():
 		vyberJazykaKarta = pygame.Rect(20, 565, smallfont.size(vyberJazykaTextStr)[0], 35)
 		pygame.draw.rect(surface, color_light, vyberJazykaKarta)
 		surface.blit(vyberJazykaTextKarta, vyberJazykaRectKarta)
-		
+
 		if hryKartaBool:
 			hryKarta = pygame.Rect(smallfont.size(vyberJazykaTextStr)[0] + 22, 565, smallfont.size(hryTextStr)[0] + 17, 35)
 			hryRectKarta.x = smallfont.size(vyberJazykaTextStr)[0] + 30
@@ -277,7 +275,7 @@ def vyber_jazyku():
 				# Neklikl na text
 				else:
 					break
-				
+
 				surface.fill(color)
 				return texty.get(vybranyJazyk)
 			ukonceni(events, False)
@@ -350,14 +348,14 @@ def hryFunkce(stiskla_karta):
 	global hryKarta
 	global hryKartaBool
 	global executing
-	
+
 	surface.fill(color)
 	if stiskla_karta and executing:
 		executing = False
 		return True
 	executing = True
 	user_text = ''
-		
+
 	hryKartaBool = True
 	zustat = False
 	print(f"{Fore.GREEN}LOG:{Fore.RESET} hry:maximalizovat")
@@ -375,7 +373,7 @@ def hryFunkce(stiskla_karta):
 			hryRectKarta.x = smallfont.size(vyberJazykaTextStr)[0] + 30
 			pygame.draw.rect(surface, color_light, hryKarta)
 			surface.blit(hryTextKarta, hryRectKarta)
-			
+
 			pygame.draw.rect(surface, color_dark, vyberJazykaKarta)
 			surface.blit(vyberJazykaTextKarta, vyberJazykaRectKarta)
 		else:
@@ -404,7 +402,7 @@ def hryFunkce(stiskla_karta):
 				else:
 					user_text += events.unicode
 			ukonceni(events, False)
-			
+
 def karta(events, v_hre):
 	global executing
 	if vyberJazykaKartaBool and vyberJazykaKarta.collidepoint(events.pos):
@@ -413,16 +411,16 @@ def karta(events, v_hre):
 			executing = not executing
 		surface.fill(color)
 		return settings(True)
-		
+
 	if hryKartaBool and hryKarta.collidepoint(events.pos):
 		zustat = hryFunkce(True)
 		return zustat
-		
+
 # main loop
 while True:
 	zustat = False
 	a,b = pygame.mouse.get_pos()
-	
+
 	# text
 	if not log1:
 		print(f"{Fore.GREEN}LOG:{Fore.RESET} menu:text")
@@ -430,7 +428,7 @@ while True:
 	surface.blit(vypnoutText, vypnoutRect)
 	surface.blit(optionsText, optionsRect)
 	surface.blit(hryText, hryRect)
-	
+
 	konec_check = False
 	for events in pygame.event.get():
 		# options
@@ -444,7 +442,7 @@ while True:
 					# Zpět
 					pygame.draw.rect(surface, green, zpet)
 					surface.blit(zpetText, zpetRect)
-					
+
 					a,b = pygame.mouse.get_pos()
 					if zpet.x <= a <= zpet.x + 100 and zpet.y <= b <= zpet.y + 35:
 						pygame.draw.rect(surface, color_light, zpet)
@@ -463,7 +461,7 @@ while True:
 			if not zustat:
 				zustat = karta(events, False)
 		ukonceni(events, True)
-				
+
 		if not log2:
 			print(f"{Fore.GREEN}LOG:{Fore.RESET} menu:tlacitka")
 			log2 = True
@@ -471,7 +469,7 @@ while True:
 			pygame.draw.rect(surface, color_light, shutdown)
 		else:
 			pygame.draw.rect(surface, (15,150,15), shutdown)
-		
+
 		if options.x <= a <= options.x + 50 and options.y <= b <= options.y + 50:
 			pygame.draw.rect(surface, color_light, options)
 		else:
