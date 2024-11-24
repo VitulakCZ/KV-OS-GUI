@@ -215,7 +215,7 @@ def vyber_jazyku():
 	spanelskyRect.x = 50
 	spanelskyRect.y = 250
 
-    ruskyText = jazykfont.render("Русский", True, black)
+	ruskyText = jazykfont.render("Русский", True, black)
 	ruskyRect = ruskyText.get_rect()
 	ruskyRect.x = 50
 	ruskyRect.y = 300
