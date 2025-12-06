@@ -106,7 +106,7 @@ def preklad(jazyk):
 
 	surface.fill(color)
 	pygame.display.update()
-	translator = Translator(to_lang=jazyk)
+	translator = Translator(from_lang="en", to_lang=jazyk)
 
 	pripravaText = font.render('Připravujeme ...', True, green)
 	pripravaRect = pripravaText.get_rect()
